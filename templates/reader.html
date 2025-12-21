@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading - Manga Library</title>
+    <link rel="stylesheet" href="/static/css/reader.css">
+</head>
+<body>
+    <div class="reader-container">
+        <!-- Navigation Bar -->
+        <nav class="reader-nav">
+            <div class="nav-left">
+                <button id="backBtn" class="nav-btn">← Back</button>
+                <span id="seriesTitle" class="series-title"></span>
+            </div>
+            <div class="nav-center">
+                <span id="chapterInfo" class="chapter-info"></span>
+            </div>
+            <div class="nav-right">
+                <button id="settingsBtn" class="nav-btn settings-btn">⚙️ Settings</button>
+                <button id="prevChapterBtn" class="nav-btn" style="display: none;">← Prev</button>
+                <button id="nextChapterBtn" class="nav-btn" style="display: none;">Next →</button>
+            </div>
+        </nav>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading">Loading chapter...</div>
+        
+        <!-- Reader Content - Scroll Mode -->
+        <div id="scrollReader" class="scroll-reader" style="display: none;">
+            <div id="scrollPageContainer" class="scroll-page-container"></div>
+        </div>
+
+        <!-- Reader Content - Single Page Mode -->
+        <div id="singleReader" class="single-reader" style="display: none;">
+            <div id="singlePageContainer" class="single-page-container">
+                <div class="page-image-wrapper">
+                    <img id="currentPageImg" class="current-page-img" src="" alt="Page">
+                </div>
+            </div>
+            <div class="single-page-controls">
+                <button id="prevPageBtn" class="page-nav-btn">← Previous</button>
+                <span id="pageCounter" class="page-counter"></span>
+                <button id="nextPageBtn" class="page-nav-btn">Next →</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="reader-footer">
+            <div id="pageIndicator" class="page-indicator"></div>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settingsPanel" class="settings-panel">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>⚙️ Reader Settings</h2>
+                <button id="closeSettings" class="close-btn">×</button>
+            </div>
+            
+            <div class="settings-body">
+                <!-- Reader Mode -->
+                <div class="setting-group">
+                    <label class="setting-label">Reader Mode</label>
+                    <div class="setting-options">
+                        <button class="setting-option active" data-setting="reader_mode" data-value="scroll">
+                            <span class="option-icon">📜</span>
+                            <span class="option-label">Scrolling</span>
+                            <span class="option-desc">Vertical continuous scroll</span>
+                        </button>
+                        <button class="setting-option" data-setting="reader_mode" data-value="single">
+                            <span class="option-icon">📄</span>
+                            <span class="option-label">Single Page</span>
+                            <span class="option-desc">One page at a time</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reading Direction (for single page mode) -->
+                <div class="setting-group" id="directionSetting">
+                    <label class="setting-label">Reading Direction (Single Page Mode)</label>
+                    <div class="setting-options">
+                        <button class="setting-option active" data-setting="reading_direction" data-value="ltr">
+                            <span class="option-icon">→</span>
+                            <span class="option-label">Left to Right</span>
+                            <span class="option-desc">Click right to go forward</span>
+                        </button>
+                        <button class="setting-option" data-setting="reading_direction" data-value="rtl">
+                            <span class="option-icon">←</span>
+                            <span class="option-label">Right to Left</span>
+                            <span class="option-desc">Click left to go forward</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Fit Mode (for single page mode) -->
+                <div class="setting-group" id="fitModeSetting">
+                    <label class="setting-label">Image Fit (Single Page Mode)</label>
+                    <div class="setting-options">
+                        <button class="setting-option active" data-setting="fit_mode" data-value="width">
+                            <span class="option-icon">↔️</span>
+                            <span class="option-label">Fit Width</span>
+                        </button>
+                        <button class="setting-option" data-setting="fit_mode" data-value="height">
+                            <span class="option-icon">↕️</span>
+                            <span class="option-label">Fit Height</span>
+                        </button>
+                        <button class="setting-option" data-setting="fit_mode" data-value="original">
+                            <span class="option-icon">🔍</span>
+                            <span class="option-label">Original Size</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-footer">
+                <button id="resetSettings" class="reset-btn">Reset to Defaults</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const seriesName = "{{ series_name }}";
+        const chapterNum = "{{ chapter_num }}";
+    </script>
+    <script src="/static/js/reader.js"></script>
+</body>
+</html>

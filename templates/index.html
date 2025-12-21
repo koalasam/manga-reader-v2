@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manga Library</title>
+    <link rel="stylesheet" href="/static/css/library.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Manga Library</h1>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search series...">
+            </div>
+        </header>
+
+        <main>
+            <div id="loading" class="loading">Loading library...</div>
+            <div id="libraryGrid" class="library-grid"></div>
+            <div id="noResults" class="no-results" style="display: none;">
+                No series found
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/js/library.js"></script>
+</body>
+</html>

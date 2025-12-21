@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Series - Manga Library</title>
+    <link rel="stylesheet" href="/static/css/series.css">
+</head>
+<body>
+    <div class="series-container">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <button id="backBtn" class="nav-btn">← Back to Library</button>
+        </nav>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading series...</p>
+        </div>
+
+        <!-- Series Content -->
+        <div id="seriesContent" style="display: none;">
+            <!-- Banner Section with Cover and Info -->
+            <div class="series-banner">
+                <div class="banner-background" id="bannerBg"></div>
+                <div class="banner-overlay"></div>
+                <div class="banner-content">
+                    <div class="cover-container">
+                        <div class="cover-image">
+                            <img id="coverImg" src="" alt="Cover" onerror="this.parentElement.classList.add('error')">
+                            <div class="cover-placeholder">📖</div>
+                        </div>
+                    </div>
+                    <div class="series-info">
+                        <h1 id="seriesTitle" class="series-title"></h1>
+                        <div id="seriesMeta" class="series-meta"></div>
+                        <div id="seriesDescription" class="series-description"></div>
+                        <div id="seriesGenres" class="series-genres"></div>
+                        <div id="alternativeTitles" class="alternative-titles"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapters Section -->
+            <div class="chapters-section">
+                <div class="section-header">
+                    <h2>📚 Chapters</h2>
+                    <div class="chapter-controls">
+                        <span id="chapterCount" class="chapter-count"></span>
+                        <button id="sortBtn" class="sort-btn" title="Toggle sort order">
+                            <span id="sortIcon">↓</span> Sort
+                        </button>
+                    </div>
+                </div>
+                <div id="chapterList" class="chapter-list"></div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display: none;">
+            <div class="error-icon">⚠️</div>
+            <h2>Series Not Found</h2>
+            <p>The requested manga series could not be loaded.</p>
+            <button onclick="window.location.href='/'" class="nav-btn">Return to Library</button>
+        </div>
+    </div>
+
+    <script>
+        const seriesName = "{{ series_name }}";
+    </script>
+    <script src="/static/js/series.js"></script>
+</body>
+</html>
