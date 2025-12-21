@@ -2,44 +2,59 @@
 
 A self-hostable manga library and reading server with a scrolling reader layout.
 
-## Project Structure
+## Manga File Structure
 
 ```
-manga-server/
-├── app.py                  # Main Flask application
-├── requirements.txt        # Python dependencies
-├── scripts/               # Feature modules
-│   ├── library_scanner.py
-│   ├── metadata_manager.py
-│   ├── chapter_reader.py
-│   ├── cover_selector.py  # Smart cover image selection
-│   └── settings_manager.py # User preferences
-├── templates/             # HTML templates
-│   ├── index.html         # Library view
-│   ├── series.html        # Series detail page
-│   └── reader.html        # Chapter reader (both modes)
-├── static/               # Static assets
-│   ├── css/
-│   │   ├── library.css
-│   │   ├── series.css
-│   │   └── reader.css
-│   └── js/
-│       ├── library.js
-│       ├── series.js
-│       └── reader.js
-├── data/                 # Application data
-│   ├── metadata.json     # Series metadata storage
-│   └── settings.json     # User settings storage
-└── manga/               # Your manga files
-    └── series-name/
-        └── chapter-#/
-            ├── page1.jpg
-            ├── page2.jpg
-            └── ...
+path_to_manga/
+└── manga/
+    ├── series-name-1/
+    │   ├── chapter-1/
+    │   │   ├──01.jpg
+    │   │   ├──02.jpg
+    │   │   └── ...
+    │   └──chapter-#/
+    │       └── ...
+    └──.../  
 ```
 
 ## Installation
 
+### Docker Compose (recommended)
+```
+services:
+  manga-app:
+    container_name: manga-library
+    image: python:3.11-slim
+    restart: unless-stopped
+
+    working_dir: /app/manga-reader-v2
+
+    command: >
+      sh -c "
+      apt-get update &&
+      apt-get install -y git &&
+      rm -rf /app/* &&
+      git clone https://github.com/koalasam/manga-reader-v2.git /app/manga-reader-v2 &&
+      pip install --no-cache-dir -r requirements.txt &&
+      python app.py
+      "
+
+    volumes:
+      # Read-only manga library
+      - path_to_manga_directory/manga:/manga:ro
+
+      # Read-write app data
+      - /app/manga-reader-v2/data:/data:rw
+
+    environment:
+      - PYTHONUNBUFFERED=1
+
+    ports:
+      - "9008:5000"
+```
+
+
+### Python (not recommended)
 1. Install Python dependencies:
 ```bash
 pip install -r requirements.txt
