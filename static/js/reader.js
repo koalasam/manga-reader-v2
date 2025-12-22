@@ -67,6 +67,23 @@ function applySettings() {
             displaySingleReader();
         }
     }
+    // Hide single-page controls and page counter when in scroll mode
+    try {
+        const pageCounter = document.getElementById('pageCounter');
+        const singleControls = document.querySelector('.single-page-controls');
+        const footerIndicator = document.getElementById('pageIndicator');
+        if (settings.reader_mode === 'scroll') {
+            if (pageCounter) pageCounter.style.display = 'none';
+            if (singleControls) singleControls.style.display = 'none';
+            if (footerIndicator) footerIndicator.style.display = 'none';
+        } else {
+            if (pageCounter) pageCounter.style.display = '';
+            if (singleControls) singleControls.style.display = '';
+            if (footerIndicator) footerIndicator.style.display = '';
+        }
+    } catch (e) {
+        // ignore if elements not present yet
+    }
     
     // Apply fit mode
     const container = document.getElementById('singlePageContainer');
@@ -233,59 +250,65 @@ function setupSinglePageControls() {
     const prevBtn = document.getElementById('prevPageBtn');
     const nextBtn = document.getElementById('nextPageBtn');
     const container = document.getElementById('singlePageContainer');
-    
+
     // Button controls
     prevBtn.addEventListener('click', () => {
         if (currentPageIndex > 0) {
             showPage(currentPageIndex - 1);
+        } else if (currentChapter && currentChapter.navigation && currentChapter.navigation.prev_chapter) {
+            navigateToChapter(currentChapter.navigation.prev_chapter);
         }
     });
-    
+
     nextBtn.addEventListener('click', () => {
         if (currentPageIndex < currentChapter.pages.length - 1) {
             showPage(currentPageIndex + 1);
-        } else {
-            // Go to next chapter if available
-            if (currentChapter.navigation.next_chapter_num) {
-                navigateToChapter(currentChapter.navigation.next_chapter_num);
-            }
+        } else if (currentChapter && currentChapter.navigation && currentChapter.navigation.next_chapter) {
+            navigateToChapter(currentChapter.navigation.next_chapter);
         }
     });
-    
+
     // Click navigation on image
     container.addEventListener('click', (e) => {
         const rect = container.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const clickPercentage = clickX / rect.width;
-        
-        // Determine which side was clicked based on reading direction
+
         if (settings.reading_direction === 'ltr') {
             if (clickPercentage < 0.4) {
-                // Left side - go previous
+                // Left side - previous page or previous chapter
                 if (currentPageIndex > 0) {
                     showPage(currentPageIndex - 1);
+                } else if (currentChapter && currentChapter.navigation && currentChapter.navigation.prev_chapter) {
+                    navigateToChapter(currentChapter.navigation.prev_chapter);
                 }
             } else if (clickPercentage > 0.6) {
-                // Right side - go next
+                // Right side - next page or next chapter
                 if (currentPageIndex < currentChapter.pages.length - 1) {
                     showPage(currentPageIndex + 1);
+                } else if (currentChapter && currentChapter.navigation && currentChapter.navigation.next_chapter) {
+                    navigateToChapter(currentChapter.navigation.next_chapter);
                 }
             }
-        } else { // rtl
+        } else {
             if (clickPercentage < 0.4) {
-                // Left side - go next
+                // Left side in RTL - next
                 if (currentPageIndex < currentChapter.pages.length - 1) {
                     showPage(currentPageIndex + 1);
+                } else if (currentChapter && currentChapter.navigation && currentChapter.navigation.next_chapter) {
+                    navigateToChapter(currentChapter.navigation.next_chapter);
                 }
             } else if (clickPercentage > 0.6) {
-                // Right side - go previous
+                // Right side in RTL - previous
                 if (currentPageIndex > 0) {
                     showPage(currentPageIndex - 1);
+                } else if (currentChapter && currentChapter.navigation && currentChapter.navigation.prev_chapter) {
+                    navigateToChapter(currentChapter.navigation.prev_chapter);
                 }
             }
         }
     });
-    
+
     // Keyboard navigation
     document.addEventListener('keydown', handleKeyboardNavigation);
 }
@@ -295,26 +318,34 @@ function handleKeyboardNavigation(e) {
     
     if (e.key === 'ArrowLeft') {
         if (settings.reading_direction === 'ltr') {
-            // Previous page
-            if (currentPageIndex > 0) {
-                showPage(currentPageIndex - 1);
+            // Previous page or previous chapter
+                if (currentPageIndex > 0) {
+                    showPage(currentPageIndex - 1);
+                } else if (currentChapter && currentChapter.navigation && currentChapter.navigation.prev_chapter) {
+                    navigateToChapter(currentChapter.navigation.prev_chapter);
             }
         } else {
-            // Next page
+            // Next page or next chapter (RTL)
             if (currentPageIndex < currentChapter.pages.length - 1) {
                 showPage(currentPageIndex + 1);
+            } else if (currentChapter && currentChapter.navigation && currentChapter.navigation.next_chapter) {
+                navigateToChapter(currentChapter.navigation.next_chapter);
             }
         }
     } else if (e.key === 'ArrowRight') {
         if (settings.reading_direction === 'ltr') {
-            // Next page
+            // Next page or next chapter
             if (currentPageIndex < currentChapter.pages.length - 1) {
                 showPage(currentPageIndex + 1);
+            } else if (currentChapter && currentChapter.navigation && currentChapter.navigation.next_chapter) {
+                navigateToChapter(currentChapter.navigation.next_chapter);
             }
         } else {
-            // Previous page
+            // Previous page or previous chapter (RTL)
             if (currentPageIndex > 0) {
                 showPage(currentPageIndex - 1);
+            } else if (currentChapter && currentChapter.navigation && currentChapter.navigation.prev_chapter) {
+                navigateToChapter(currentChapter.navigation.prev_chapter);
             }
         }
     }
@@ -339,14 +370,14 @@ function setupNavigation() {
     });
     
     prevBtn.addEventListener('click', () => {
-        if (currentChapter && currentChapter.navigation.prev_chapter_num) {
-            navigateToChapter(currentChapter.navigation.prev_chapter_num);
+        if (currentChapter && currentChapter.navigation.prev_chapter) {
+            navigateToChapter(currentChapter.navigation.prev_chapter);
         }
     });
     
     nextBtn.addEventListener('click', () => {
-        if (currentChapter && currentChapter.navigation.next_chapter_num) {
-            navigateToChapter(currentChapter.navigation.next_chapter_num);
+        if (currentChapter && currentChapter.navigation.next_chapter) {
+            navigateToChapter(currentChapter.navigation.next_chapter);
         }
     });
 }
