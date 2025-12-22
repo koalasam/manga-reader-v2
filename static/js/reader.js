@@ -118,8 +118,36 @@ function updateHeaderInfo() {
     const seriesTitle = document.getElementById('seriesTitle');
     const chapterInfo = document.getElementById('chapterInfo');
     
-    seriesTitle.textContent = currentChapter.series_name;
-    chapterInfo.textContent = `${currentChapter.chapter} - ${currentChapter.page_count} pages`;
+    // Format series name for display
+    const formattedSeriesName = formatDisplayName(currentChapter.series_name);
+    seriesTitle.textContent = formattedSeriesName;
+    
+    // Use chapter_display if available, otherwise format chapter name
+    const chapterDisplay = currentChapter.chapter_display || formatChapterName(currentChapter.chapter);
+    chapterInfo.textContent = `${chapterDisplay} - ${currentChapter.page_count} pages`;
+}
+
+function formatDisplayName(name) {
+    return name.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+
+function formatChapterName(chapterName) {
+    // Extract chapter number and remove leading zeros
+    const match = chapterName.match(/(\d+(?:\.\d+)?)/);
+    if (match) {
+        let num = match[1];
+        // Remove leading zeros but keep decimal part
+        if (num.includes('.')) {
+            const [whole, decimal] = num.split('.');
+            num = `${parseInt(whole, 10)}.${decimal}`;
+        } else {
+            num = String(parseInt(num, 10));
+        }
+        return `Chapter ${num}`;
+    }
+    
+    // Fallback: format the name nicely
+    return chapterName.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
 // ===== Scroll Reader Mode =====
@@ -332,14 +360,16 @@ function updateNavigation() {
         
         if (nav.prev_chapter) {
             prevBtn.style.display = 'block';
-            prevBtn.textContent = `← Chapter ${nav.prev_chapter_num}`;
+            const prevDisplay = nav.prev_chapter_display || formatChapterName(nav.prev_chapter);
+            prevBtn.textContent = `← ${prevDisplay}`;
         } else {
             prevBtn.style.display = 'none';
         }
         
         if (nav.next_chapter) {
             nextBtn.style.display = 'block';
-            nextBtn.textContent = `Chapter ${nav.next_chapter_num} →`;
+            const nextDisplay = nav.next_chapter_display || formatChapterName(nav.next_chapter);
+            nextBtn.textContent = `${nextDisplay} →`;
         } else {
             nextBtn.style.display = 'none';
         }

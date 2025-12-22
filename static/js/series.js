@@ -149,12 +149,21 @@ function createChapterItem(chapterName, index) {
     number.className = 'chapter-number';
     number.textContent = formatChapterName(chapterName);
     
-    const name = document.createElement('div');
-    name.className = 'chapter-name';
-    name.textContent = chapterName;
+    // Only show technical name if it's different from formatted name
+    const technicalName = formatTechnicalName(chapterName);
+    const formattedName = formatChapterName(chapterName);
     
-    leftDiv.appendChild(number);
-    leftDiv.appendChild(name);
+    // Don't show redundant technical name if it's essentially the same
+    if (technicalName.toLowerCase() !== formattedName.toLowerCase() && 
+        !technicalName.toLowerCase().includes('chapter')) {
+        const name = document.createElement('div');
+        name.className = 'chapter-name';
+        name.textContent = technicalName;
+        leftDiv.appendChild(number);
+        leftDiv.appendChild(name);
+    } else {
+        leftDiv.appendChild(number);
+    }
     
     const arrow = document.createElement('div');
     arrow.className = 'chapter-arrow';
@@ -206,23 +215,42 @@ function setupSortButton() {
 }
 
 function formatChapterName(chapterName) {
-    // Extract chapter number and format nicely
+    // Extract chapter number and remove leading zeros
     const match = chapterName.match(/(\d+(?:\.\d+)?)/);
     if (match) {
-        return `Chapter ${match[1]}`;
+        let num = match[1];
+        // Remove leading zeros but keep decimal part
+        if (num.includes('.')) {
+            const [whole, decimal] = num.split('.');
+            num = `${parseInt(whole, 10)}.${decimal}`;
+        } else {
+            num = String(parseInt(num, 10));
+        }
+        return `Chapter ${num}`;
     }
-    // Fallback: format the name
-    return chapterName
-        .replace(/-/g, ' ')
-        .replace(/_/g, ' ')
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+    
+    // Fallback: format the name nicely
+    return chapterName.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+
+function formatTechnicalName(chapterName) {
+    // Format the technical folder/file name for display
+    return chapterName.replace(/-/g, ' ').replace(/_/g, ' ');
 }
 
 function extractChapterNumber(chapterName) {
     const match = chapterName.match(/(\d+(?:\.\d+)?)/);
-    return match ? match[1] : '1';
+    if (match) {
+        let num = match[1];
+        // Remove leading zeros
+        if (num.includes('.')) {
+            const [whole, decimal] = num.split('.');
+            return `${parseInt(whole, 10)}.${decimal}`;
+        } else {
+            return String(parseInt(num, 10));
+        }
+    }
+    return '1';
 }
 
 function formatSeriesName(name) {

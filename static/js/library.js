@@ -81,7 +81,8 @@ function createSeriesCard(series) {
     
     const name = document.createElement('div');
     name.className = 'series-name';
-    name.textContent = series.name;
+    // Format series name for display
+    name.textContent = formatSeriesName(series.name);
     
     const meta = document.createElement('div');
     meta.className = 'series-meta';
@@ -114,9 +115,29 @@ function viewSeries(series) {
     window.location.href = `/series/${encodeURIComponent(series.name)}`;
 }
 
+function formatSeriesName(name) {
+    // Replace dashes and underscores with spaces and capitalize words
+    return name
+        .replace(/-/g, ' ')
+        .replace(/_/g, ' ')
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+}
+
 function extractChapterNumber(chapterName) {
     const match = chapterName.match(/(\d+(?:\.\d+)?)/);
-    return match ? match[1] : '1';
+    if (match) {
+        let num = match[1];
+        // Remove leading zeros
+        if (num.includes('.')) {
+            const [whole, decimal] = num.split('.');
+            return `${parseInt(whole, 10)}.${decimal}`;
+        } else {
+            return String(parseInt(num, 10));
+        }
+    }
+    return '1';
 }
 
 function setupSearch() {
@@ -131,7 +152,13 @@ function setupSearch() {
         }
         
         const filtered = allSeries.filter(series => {
-            // Search in series name
+            // Search in series name (formatted)
+            const formattedName = formatSeriesName(series.name).toLowerCase();
+            if (formattedName.includes(query)) {
+                return true;
+            }
+            
+            // Search in original series name
             if (series.name.toLowerCase().includes(query)) {
                 return true;
             }

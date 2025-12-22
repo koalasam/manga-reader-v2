@@ -44,10 +44,28 @@ class ChapterReader:
         return {
             'series_name': series_name,
             'chapter': chapter_path.name,
+            'chapter_display': self.format_chapter_name(chapter_path.name),
             'pages': pages,
             'page_count': len(pages),
             'navigation': nav_info
         }
+    
+    def format_chapter_name(self, chapter_name):
+        """Format chapter name for display"""
+        # Extract chapter number
+        match = re.search(r'(\d+(?:\.\d+)?)', chapter_name)
+        if match:
+            num = match.group(1)
+            # Remove leading zeros but keep decimal part
+            if '.' in num:
+                whole, decimal = num.split('.')
+                num = f"{int(whole)}.{decimal}"
+            else:
+                num = str(int(num))
+            return f"Chapter {num}"
+        
+        # Fallback: format the name nicely
+        return chapter_name.replace('-', ' ').replace('_', ' ').title()
     
     def _get_navigation_info(self, series_name, current_chapter):
         """Get previous/next chapter info"""
@@ -75,13 +93,17 @@ class ChapterReader:
         
         # Previous chapter
         if current_idx > 0:
-            nav['prev_chapter'] = chapters[current_idx - 1]
-            nav['prev_chapter_num'] = self._extract_chapter_number(chapters[current_idx - 1])
+            prev_chapter = chapters[current_idx - 1]
+            nav['prev_chapter'] = prev_chapter
+            nav['prev_chapter_num'] = self._extract_chapter_number(prev_chapter)
+            nav['prev_chapter_display'] = self.format_chapter_name(prev_chapter)
         
         # Next chapter
         if current_idx < len(chapters) - 1:
-            nav['next_chapter'] = chapters[current_idx + 1]
-            nav['next_chapter_num'] = self._extract_chapter_number(chapters[current_idx + 1])
+            next_chapter = chapters[current_idx + 1]
+            nav['next_chapter'] = next_chapter
+            nav['next_chapter_num'] = self._extract_chapter_number(next_chapter)
+            nav['next_chapter_display'] = self.format_chapter_name(next_chapter)
         
         nav['total_chapters'] = len(chapters)
         nav['current_index'] = current_idx + 1
