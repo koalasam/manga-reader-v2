@@ -1,32 +1,13 @@
-version: "3.9"
-
 services:
-  manga-app:
-    container_name: manga-library
-    image: python:3.11-slim
+  manga-reader:
+    container_name: manga-reader-v2
+    build:
+      context: https://github.com/koalasam/manga-reader-v2.git
     restart: unless-stopped
 
-    working_dir: /app/manga-reader-v2
-
-    command: >
-      sh -c "
-      apt-get update &&
-      apt-get install -y git &&
-      rm -rf /app/* &&
-      git clone https://github.com/koalasam/manga-reader-v2.git /app/manga-reader-v2 &&
-      pip install --no-cache-dir -r requirements.txt &&
-      python app.py
-      "
+    ports:
+      - "5000:5000"
 
     volumes:
-      # Read-only manga library
-      - path_to_manga_directory/manga:/manga:ro
-
-      # Read-write app data
-      - /app/manga-reader-v2/data:/data:rw
-
-    environment:
-      - PYTHONUNBUFFERED=1
-
-    ports:
-      - "9008:5000"
+      - /path/to/data:/app/data
+      - /path/to/manga:/app/manga
