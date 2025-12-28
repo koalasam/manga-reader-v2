@@ -1,8 +1,6 @@
-# Work in Progress (not recomened for deployment)
+# Manga Library Server - Work in Progress (not recomened for deployment)
 
-# Manga Library Server
-
-## Manga File Structure
+### Manga File Structure
 
 ```
 path_to_manga/
