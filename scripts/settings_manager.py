@@ -1,6 +1,7 @@
 """
 Settings Manager - Handles user preferences
 Stores: reader mode, reading direction, and other settings
+Includes dual-page mode
 """
 
 import json
@@ -10,7 +11,7 @@ class SettingsManager:
     def __init__(self, settings_file='data/settings.json'):
         self.settings_file = Path(settings_file)
         self.default_settings = {
-            'reader_mode': 'scroll',  # 'scroll' or 'single'
+            'reader_mode': 'scroll',  # 'scroll', 'single', or 'dual'
             'reading_direction': 'ltr',  # 'ltr' (left-to-right) or 'rtl' (right-to-left)
             'single_page_click_navigation': True,
             'fit_mode': 'width',  # 'width', 'height', 'original'

@@ -46,6 +46,21 @@
             </div>
         </div>
 
+        <!-- Reader Content - Dual Page Mode -->
+        <div id="dualReader" class="dual-reader" style="display: none;">
+            <div id="dualPageContainer" class="dual-page-container">
+                <div id="dualPageWrapper" class="dual-page-wrapper">
+                    <img id="rightPageImg" class="dual-page-img" src="" alt="Right Page" style="display: none;">
+                    <img id="leftPageImg" class="dual-page-img" src="" alt="Left Page" style="display: none;">
+                </div>
+            </div>
+            <div class="single-page-controls">
+                <button id="prevPairBtn" class="page-nav-btn">← Previous</button>
+                <span id="pairCounter" class="page-counter"></span>
+                <button id="nextPairBtn" class="page-nav-btn">Next →</button>
+            </div>
+        </div>
+
         <!-- Footer -->
         <div class="reader-footer">
             <div id="pageIndicator" class="page-indicator"></div>
@@ -67,13 +82,24 @@
                     <div class="setting-options">
                         <button class="setting-option active" data-setting="reader_mode" data-value="scroll">
                             <span class="option-icon">📜</span>
-                            <span class="option-label">Scrolling</span>
-                            <span class="option-desc">Vertical continuous scroll</span>
+                            <div class="option-content">
+                                <span class="option-label">Scrolling</span>
+                                <span class="option-desc">Vertical continuous scroll</span>
+                            </div>
                         </button>
                         <button class="setting-option" data-setting="reader_mode" data-value="single">
                             <span class="option-icon">📄</span>
-                            <span class="option-label">Single Page</span>
-                            <span class="option-desc">One page at a time</span>
+                            <div class="option-content">
+                                <span class="option-label">Single Page</span>
+                                <span class="option-desc">One page at a time</span>
+                            </div>
+                        </button>
+                        <button class="setting-option" data-setting="reader_mode" data-value="dual">
+                            <span class="option-icon">📖</span>
+                            <div class="option-content">
+                                <span class="option-label">Dual Page</span>
+                                <span class="option-desc">Two pages side-by-side (RTL)</span>
+                            </div>
                         </button>
                     </div>
                 </div>
@@ -84,20 +110,24 @@
                     <div class="setting-options">
                         <button class="setting-option active" data-setting="reading_direction" data-value="ltr">
                             <span class="option-icon">→</span>
-                            <span class="option-label">Left to Right</span>
-                            <span class="option-desc">Click right to go forward</span>
+                            <div class="option-content">
+                                <span class="option-label">Left to Right</span>
+                                <span class="option-desc">Click right to go forward</span>
+                            </div>
                         </button>
                         <button class="setting-option" data-setting="reading_direction" data-value="rtl">
                             <span class="option-icon">←</span>
-                            <span class="option-label">Right to Left</span>
-                            <span class="option-desc">Click left to go forward</span>
+                            <div class="option-content">
+                                <span class="option-label">Right to Left</span>
+                                <span class="option-desc">Click left to go forward</span>
+                            </div>
                         </button>
                     </div>
                 </div>
 
-                <!-- Fit Mode (for single page mode) -->
+                <!-- Fit Mode -->
                 <div class="setting-group" id="fitModeSetting">
-                    <label class="setting-label">Image Fit (Single Page Mode)</label>
+                    <label class="setting-label">Image Fit</label>
                     <div class="setting-options">
                         <button class="setting-option active" data-setting="fit_mode" data-value="width">
                             <span class="option-icon">↔️</span>

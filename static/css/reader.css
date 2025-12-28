@@ -160,7 +160,43 @@ body {
     -webkit-user-select: none;
 }
 
-/* Fit modes */
+/* Dual Page Reader Mode */
+.dual-reader {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.dual-page-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    gap: 10px;
+}
+
+.dual-page-wrapper {
+    display: flex;
+    gap: 10px;
+    max-width: 100%;
+    max-height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.dual-page-img {
+    display: block;
+    user-select: none;
+    -webkit-user-select: none;
+    max-height: calc(100vh - 200px);
+}
+
+/* Fit modes for single page */
 .fit-width .current-page-img {
     width: 100%;
     height: auto;
@@ -179,9 +215,34 @@ body {
     height: auto;
 }
 
+/* Fit modes for dual page */
+.fit-width .dual-page-img {
+    height: auto;
+    max-width: 48%;
+}
+
+.fit-height .dual-page-img {
+    height: calc(100vh - 200px);
+    width: auto;
+}
+
+.fit-original .dual-page-img {
+    max-width: 48%;
+    max-height: calc(100vh - 200px);
+    width: auto;
+    height: auto;
+}
+
+/* Single page when only one image in pair */
+.dual-page-wrapper.single-in-pair .dual-page-img {
+    max-width: 600px;
+}
+
 /* Click zones for navigation */
 .single-page-container::before,
-.single-page-container::after {
+.single-page-container::after,
+.dual-page-container::before,
+.dual-page-container::after {
     content: '';
     position: absolute;
     top: 0;
@@ -191,20 +252,24 @@ body {
     transition: background 0.2s;
 }
 
-.single-page-container::before {
+.single-page-container::before,
+.dual-page-container::before {
     left: 0;
 }
 
-.single-page-container::after {
+.single-page-container::after,
+.dual-page-container::after {
     right: 0;
 }
 
 .single-page-container:hover::before,
-.single-page-container:hover::after {
+.single-page-container:hover::after,
+.dual-page-container:hover::before,
+.dual-page-container:hover::after {
     background: rgba(255, 255, 255, 0.02);
 }
 
-/* Single page controls */
+/* Single/Dual page controls */
 .single-page-controls {
     display: flex;
     justify-content: center;
@@ -437,7 +502,8 @@ body {
         right: -100%;
     }
 
-    .single-page-container {
+    .single-page-container,
+    .dual-page-container {
         padding: 10px;
     }
 
@@ -445,13 +511,19 @@ body {
         padding: 8px 16px;
         font-size: 14px;
     }
+    
+    .dual-page-wrapper {
+        gap: 5px;
+    }
 }
 
-/* Hide scrollbar in single page mode */
-.single-reader {
+/* Hide scrollbar in single/dual page mode */
+.single-reader,
+.dual-reader {
     overflow: hidden;
 }
 
-body.single-mode {
+body.single-mode,
+body.dual-mode {
     overflow: hidden;
 }

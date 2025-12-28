@@ -1,10 +1,17 @@
 """
 Chapter Reader - Handles chapter reading functionality
 Returns page lists and navigation info
+Includes dual-page mode support
 """
 
 from pathlib import Path
 import re
+import sys
+import os
+
+# Add scripts directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
+from page_pairer import MangaPagePairer
 
 class ChapterReader:
     def __init__(self, manga_root):
@@ -38,6 +45,25 @@ class ChapterReader:
         if not pages:
             return None
         
+        # Get page pairs for dual mode
+        page_pairs = []
+        try:
+            pairer = MangaPagePairer(str(chapter_path))
+            pairs = pairer.pair_pages()
+            # Convert pairs to use relative paths
+            for pair in pairs:
+                pair_paths = [str(Path(series_name) / chapter_path.name / p) for p in pair]
+                page_pairs.append(pair_paths)
+        except Exception as e:
+            print(f"Warning: Could not generate page pairs: {e}")
+            # Fallback: simple sequential pairing
+            page_pairs = []
+            for i in range(0, len(pages), 2):
+                if i + 1 < len(pages):
+                    page_pairs.append([pages[i], pages[i + 1]])
+                else:
+                    page_pairs.append([pages[i]])
+        
         # Get navigation info
         nav_info = self._get_navigation_info(series_name, chapter_path.name)
         
@@ -46,7 +72,9 @@ class ChapterReader:
             'chapter': chapter_path.name,
             'chapter_display': self.format_chapter_name(chapter_path.name),
             'pages': pages,
+            'page_pairs': page_pairs,
             'page_count': len(pages),
+            'pair_count': len(page_pairs),
             'navigation': nav_info
         }
     
