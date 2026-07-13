@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+    <h1>Search Manga</h1>
+    <form class="search-form" id="searchForm">
+        <select name="source" id="sourceSelect">
+            {% for addon in addons %}
+                <option value="{{ addon }}" {% if addon == selected %}selected{% endif %}>{{ addon }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="q" id="searchQuery" placeholder="Enter title..." required>
+        <button type="submit">Search</button>
+    </form>
+    <div id="results" class="results-grid"></div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const query = document.getElementById('searchQuery').value.trim();
+            const source = document.getElementById('sourceSelect').value;
+            if (!query) return;
+
+            const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&source=${encodeURIComponent(source)}&limit=20`);
+            const data = await res.json();
+            const container = document.getElementById('results');
+            if (data.error) {
+                container.innerHTML = `<p>Error: ${data.error}</p>`;
+                return;
+            }
+            if (data.results.length === 0) {
+                container.innerHTML = `<p>No results found.</p>`;
+                return;
+            }
+            container.innerHTML = data.results.map(item => `
+                <div class="result-item">
+                    <a href="/series/${item.id}?source=${encodeURIComponent(source)}">
+                        ${item.cover_url ? `<img src="${item.cover_url}" alt="${item.title}" loading="lazy">` : ''}
+                        <h3>${item.title}</h3>
+                        <p>${item.description ? item.description.substring(0, 80) + '...' : ''}</p>
+                    </a>
+                </div>
+            `).join('');
+        });
+    </script>
+{% endblock %}

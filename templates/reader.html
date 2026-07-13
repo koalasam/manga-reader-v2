@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ series_title }} - {{ chapter_title }}{% endblock %}
+{% block content %}
+    <div class="card">
+        <div class="reader-nav">
+            <span><strong>{{ series_title }}</strong> — {{ chapter_title }}</span>
+            {% if next_chapter_id %}
+                <a href="{{ url_for('reader_page', chapter_id=next_chapter_id, series_id=series_id, source=source) }}" class="btn">Next Chapter →</a>
+            {% else %}
+                <span>End of chapters</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="reader-page">
+        {% for page_url in pages %}
+            <img src="{{ page_url }}" alt="Page {{ loop.index }}" loading="lazy">
+        {% endfor %}
+    </div>
+    <div class="card">
+        <div class="reader-nav">
+            <span></span>
+            {% if next_chapter_id %}
+                <a href="{{ url_for('reader_page', chapter_id=next_chapter_id, series_id=series_id, source=source) }}" class="btn">Next Chapter →</a>
+            {% else %}
+                <span>End of chapters</span>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

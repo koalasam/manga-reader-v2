@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ series.title }}{% endblock %}
+{% block content %}
+    <div class="card">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            {% if series.cover_url %}
+                <img src="{{ series.cover_url }}" alt="{{ series.title }}" class="cover">
+            {% endif %}
+            <div>
+                <h1>{{ series.title }}</h1>
+                {% if series.authors %}
+                    <p><strong>Authors:</strong> {{ series.authors | join(', ') }}</p>
+                {% endif %}
+                {% if series.status %}
+                    <p><strong>Status:</strong> {{ series.status }}</p>
+                {% endif %}
+                {% if series.tags %}
+                    <p><strong>Tags:</strong> {{ series.tags | join(', ') }}</p>
+                {% endif %}
+                {% if series.description %}
+                    <p><strong>Description:</strong> {{ series.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Chapters</h2>
+        {% if chapters %}
+            <ul class="chapter-list">
+                {% for ch in chapters %}
+                    <li>
+                        <a href="{{ url_for('reader_page', chapter_id=ch.id, series_id=series.id, source=source) }}">
+                            Chapter {{ ch.number }} {% if ch.title %}- {{ ch.title }}{% endif %}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No chapters available.</p>
+        {% endif %}
+    </div>
+{% endblock %}
