@@ -4,122 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Manga Reader{% endblock %}</title>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f5f5f5;
-        }
-        nav {
-            background: #333;
-            color: white;
-            padding: 0.5rem 1rem;
-            display: flex;
-            gap: 1rem;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 1rem auto;
-            padding: 0 1rem;
-        }
-        .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        .cover {
-            max-width: 200px;
-            border-radius: 4px;
-        }
-        .chapter-list {
-            list-style: none;
-            padding: 0;
-        }
-        .chapter-list li {
-            padding: 0.5rem;
-            border-bottom: 1px solid #eee;
-        }
-        .chapter-list li a {
-            text-decoration: none;
-            color: #0066cc;
-        }
-        .chapter-list li a:hover {
-            text-decoration: underline;
-        }
-        .reader-page img {
-            max-width: 100%;
-            display: block;
-            margin: 0 auto;
-        }
-        .nav-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        .search-form {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .search-form input, .search-form select, .search-form button {
-            padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-        .result-item {
-            background: white;
-            border-radius: 8px;
-            padding: 0.5rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .result-item img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
-        .result-item h3 {
-            font-size: 1rem;
-            margin: 0.5rem 0;
-        }
-        .result-item p {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        .reader-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0;
-        }
-        .btn {
-            background: #333;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-        .btn:hover {
-            background: #555;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <nav>
@@ -129,5 +14,6 @@
     <div class="container">
         {% block content %}{% endblock %}
     </div>
+    {% block scripts %}{% endblock %}
 </body>
 </html>
